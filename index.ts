@@ -58,6 +58,40 @@ app.post('/api/users', async (req: Request, res: Response) => {
   }
 })
 
+
+// GET all form
+app.get('/api/form', async (req: Request, res: Response) => {
+  try {
+    const users = await prisma.form.findMany()
+    res.json(users)
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch form' })
+  }
+})
+
+app.post('/api/form', async (req: Request, res: Response) => {
+  try {
+    const { fristname,lastname,phone,email,company,companysize,overview,refund} = req.body
+   
+    const user = await prisma.form.create({
+      data: {
+        fristname: fristname,
+        lastname: lastname,
+        phone:phone,
+        companysize:companysize,
+        company:company,
+         email:email,
+         overview:overview,
+         refund:refund,
+         
+      }
+    })
+    res.status(201).json(user)
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to create user' })
+  }
+})
+
 // UPDATE user
 app.put('/api/users/:id', async (req: Request, res: Response) => {
   try {
