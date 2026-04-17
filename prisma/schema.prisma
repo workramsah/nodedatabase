@@ -23,10 +23,10 @@ model Form {
   id          Int      @id @default(autoincrement())
   fristname   String
   lastname    String
-  phone       Int
+  phone       String
   email       String
   company     String
-  companysize Int
+  companysize String
   overview    String
   refund      Boolean
   createAt    DateTime @default(now())

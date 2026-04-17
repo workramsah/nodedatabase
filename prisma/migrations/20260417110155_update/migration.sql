@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "Form" ALTER COLUMN "phone" SET DATA TYPE TEXT,
+ALTER COLUMN "companysize" SET DATA TYPE TEXT;
