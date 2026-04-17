@@ -1,11 +1,13 @@
 import express, { Request, Response } from 'express'
 import { PrismaClient } from '@prisma/client'
 import path from 'path'
+import cors from 'cors';
 
 const app = express()
 const prisma = new PrismaClient()
 const port = 3000
 
+app.use(cors())
 // Middleware
 app.use(express.json())
 app.use(express.static('public'))
