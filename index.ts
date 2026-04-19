@@ -1,5 +1,6 @@
 import express, { Request, Response } from 'express'
 import { PrismaClient } from '@prisma/client'
+import { UplaodImage } from "./lib/uplaod-img";
 import path from 'path'
 import cors from 'cors';
 
@@ -209,6 +210,39 @@ app.delete('/api/company/:id', async (req: Request, res: Response) => {
     res.status(500).json({ error: 'Failed to delete user' })
   }
 })
+
+
+
+// POST create new user image
+app.post('/api/image', async (req: Request, res: Response) => {
+  try {
+    const formData = req.body; // ❌ removed req.formData()
+
+    const image = formData?.img; // assuming frontend sends base64 or url
+
+    if (!image) {
+      return res.status(400).json({ message: "uploaded Fail" }); // ✅ added return
+      return console.log(image)
+    }
+
+    const uploadResult: any = await UplaodImage(
+      image,
+      "nextjs-imagegallery"
+    );
+
+    const savedImage = await prisma.image.create({
+      data: {
+        image_url: uploadResult.secure_url,
+        public_id: uploadResult.public_id,
+      },
+    });
+
+    return res.status(201).json({ message: "uploaded successfully" });
+
+  } catch (error) {
+    return res.status(500).json({ error: 'Failed to create user' });
+  }
+});
 
 
 app.listen(port, () => {
