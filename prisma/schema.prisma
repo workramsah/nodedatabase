@@ -41,11 +41,21 @@ model Company {
   sector      String
 }
 
-
 model Image {
   id         Int      @id @default(autoincrement())
+  name       String?
+  age        Int?
   image_url  String
   public_id  String
   created_at DateTime @default(now())
 }
 
+model Companys {
+  id          Int    @id @default(autoincrement())
+  companyname String
+  phone       Int?
+  email       String
+  sector      String
+  image_url   String
+  public_id   String
+}

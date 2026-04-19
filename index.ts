@@ -213,11 +213,22 @@ app.delete('/api/company/:id', async (req: Request, res: Response) => {
   }
 })
 
+//GET image
+app.get('/api/image', async (req: Request, res: Response) => {
+  try {
+    const users = await prisma.image.findMany()
+    res.json(users)
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch form' })
+  }
+})
+
 
 
 // POST create new user image
 app.post('/api/image', upload.single('img'), async (req: Request, res: Response) => {
   try {
+    const {name,age} = req.body
     const image = (req as any).file;
 
     if (!image) {
@@ -233,6 +244,8 @@ app.post('/api/image', upload.single('img'), async (req: Request, res: Response)
       data: {
         image_url: uploadResult.secure_url,
         public_id: uploadResult.public_id,
+        name:name,
+        age:age
       },
     });
 
@@ -247,6 +260,56 @@ app.post('/api/image', upload.single('img'), async (req: Request, res: Response)
     return res.status(500).json({ error: error.message || 'Failed to create user' });
   }
 });
+
+
+
+//image upload and company data
+app.post('/api/companys', upload.single('img'), async (req: Request, res: Response) => {
+  try {
+    const {companyname,phone,email,sector} = req.body
+    const image = (req as any).file;
+
+    if (!image) {
+      return res.status(400).json({ message: "uploaded Fail" });
+    }
+
+    const uploadResult: any = await UplaodImage(
+      image,
+      "nextjs-imagegallery"
+    );
+
+    const savedImage = await prisma.companys.create({
+      data: {
+        image_url: uploadResult.secure_url,
+        public_id: uploadResult.public_id,
+        companyname:companyname,
+        phone:phone,
+        email:email,
+        sector:sector
+      },
+    });
+
+    return res.status(201).json({
+        success: true,
+        message: "Image uploaded successfully",
+        image: savedImage,
+      });
+
+  } catch (error: any) {
+    console.error('Image upload error:', error);
+    return res.status(500).json({ error: error.message || 'Failed to create user' });
+  }
+});
+
+
+app.get('/api/companys', async (req: Request, res: Response) => {
+  try {
+    const users = await prisma.companys.findMany()
+    res.json(users)
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch form' })
+  }
+})
 
 
 app.listen(port, () => {
