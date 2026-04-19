@@ -149,7 +149,7 @@ app.post('/api/company', async (req: Request, res: Response) => {
 })
 
 
-// GET all form
+// GET all company
 app.get('/api/company', async (req: Request, res: Response) => {
   try {
     const users = await prisma.company.findMany()
@@ -158,6 +158,58 @@ app.get('/api/company', async (req: Request, res: Response) => {
     res.status(500).json({ error: 'Failed to fetch form' })
   }
 })
+
+// get single company
+app.get('/api/company/:id', async (req: Request, res: Response) => {
+  try {
+    const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id
+    const user = await prisma.company.findUnique({
+      where: { id: parseInt(id) }
+    })
+    if (user) {
+      res.json(user)
+    } else {
+      res.status(404).json({ error: 'User not found' })
+    }
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch user' })
+  }
+})
+
+app.put('/api/company/:id', async (req: Request, res: Response) => {
+  try {
+    const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id
+    const { companyname,phone,email,sector} = req.body
+    const user = await prisma.company.update({
+      where: { id: parseInt(id) },
+      data: {
+       companyname:companyname,
+       phone:phone,
+       email:email,
+       sector:sector
+         
+      }
+    })
+    res.json(user)
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to update user' })
+  }
+})
+
+
+// DELETE user
+app.delete('/api/company/:id', async (req: Request, res: Response) => {
+  try {
+    const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id
+    await prisma.company.delete({
+      where: { id: parseInt(id) }
+    })
+    res.json({ message: 'User deleted' })
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to delete user' })
+  }
+})
+
 
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`)
