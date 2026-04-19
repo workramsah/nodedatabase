@@ -3,10 +3,12 @@ import { PrismaClient } from '@prisma/client'
 import { UplaodImage } from "./lib/uplaod-img";
 import path from 'path'
 import cors from 'cors';
+import multer from 'multer';
 
 const app = express()
 const prisma = new PrismaClient()
 const port = 3000
+const upload = multer({ storage: multer.memoryStorage() })
 
 app.use(cors())
 // Middleware
@@ -214,15 +216,12 @@ app.delete('/api/company/:id', async (req: Request, res: Response) => {
 
 
 // POST create new user image
-app.post('/api/image', async (req: Request, res: Response) => {
+app.post('/api/image', upload.single('img'), async (req: Request, res: Response) => {
   try {
-    const formData = req.body; // ❌ removed req.formData()
-
-    const image = formData?.img; // assuming frontend sends base64 or url
+    const image = (req as any).file;
 
     if (!image) {
-      return res.status(400).json({ message: "uploaded Fail" }); // ✅ added return
-      return console.log(image)
+      return res.status(400).json({ message: "uploaded Fail" });
     }
 
     const uploadResult: any = await UplaodImage(
@@ -237,10 +236,15 @@ app.post('/api/image', async (req: Request, res: Response) => {
       },
     });
 
-    return res.status(201).json({ message: "uploaded successfully" });
+    return res.status(201).json({
+        success: true,
+        message: "Image uploaded successfully",
+        image: savedImage,
+      });
 
-  } catch (error) {
-    return res.status(500).json({ error: 'Failed to create user' });
+  } catch (error: any) {
+    console.error('Image upload error:', error);
+    return res.status(500).json({ error: error.message || 'Failed to create user' });
   }
 });
 

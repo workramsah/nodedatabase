@@ -15,8 +15,17 @@ export const UplaodImage = async (file: any, folder: string) => {
     throw new Error("No file provided");
   }
 
-  const buffer = await file.arrayBuffer();
-  const bytes = Buffer.from(buffer);
+  const bytes = Buffer.isBuffer(file)
+    ? file
+    : file.buffer
+    ? Buffer.from(file.buffer)
+    : file.arrayBuffer
+    ? Buffer.from(await file.arrayBuffer())
+    : null;
+
+  if (!bytes) {
+    throw new Error("Invalid file data");
+  }
 
   return new Promise((resolve, reject) => {
     const uploadStream = cloudinary.uploader.upload_stream(
