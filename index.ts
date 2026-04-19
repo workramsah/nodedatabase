@@ -128,6 +128,37 @@ app.get('/', (req: Request, res: Response) => {
   res.sendFile(path.join(__dirname, 'public/index.html'))
 })
 
+// company
+app.post('/api/company', async (req: Request, res: Response) => {
+  try {
+    const {companyname,phone,email,sector} = req.body
+   
+    const user = await prisma.company.create({
+      data: {
+       companyname:companyname,
+       phone:phone,
+       email:email,
+       sector:sector
+         
+      }
+    })
+    res.status(201).json(user)
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to create user' })
+  }
+})
+
+
+// GET all form
+app.get('/api/company', async (req: Request, res: Response) => {
+  try {
+    const users = await prisma.company.findMany()
+    res.json(users)
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch form' })
+  }
+})
+
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`)
 })

@@ -32,3 +32,11 @@ model Form {
   refund      Boolean
   createAt    DateTime @default(now())
 }
+
+model Company {
+  id          Int    @id @default(autoincrement())
+  companyname String
+  phone       Int
+  email       String
+  sector      String
+}
