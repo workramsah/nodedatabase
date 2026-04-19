@@ -26,6 +26,7 @@ model Form {
   phone       String
   email       String
   company     String
+  country     String?
   companysize String
   overview    String
   refund      Boolean

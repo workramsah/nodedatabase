@@ -71,7 +71,7 @@ app.get('/api/form', async (req: Request, res: Response) => {
 
 app.post('/api/form', async (req: Request, res: Response) => {
   try {
-    const { fristname,lastname,phone,email,company,companysize,overview,refund} = req.body
+    const { fristname,lastname,phone,email,company,companysize,overview,refund,country} = req.body
    
     const user = await prisma.form.create({
       data: {
@@ -83,6 +83,7 @@ app.post('/api/form', async (req: Request, res: Response) => {
          email:email,
          overview:overview,
          refund:refund,
+         country:country,
          
       }
     })
