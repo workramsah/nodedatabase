@@ -51,9 +51,9 @@ model Image {
 }
 
 model Companys {
-  id          Int    @id @default(autoincrement())
+  id          Int     @id @default(autoincrement())
   companyname String
-  phone       Int?
+  phone       String?
   email       String
   sector      String
   image_url   String
