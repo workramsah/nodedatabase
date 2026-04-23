@@ -59,3 +59,8 @@ model Companys {
   image_url   String
   public_id   String
 }
+
+model Url {
+  id      Int    @id @default(autoincrement())
+  compurl String
+}

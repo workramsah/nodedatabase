@@ -74,20 +74,20 @@ app.get('/api/form', async (req: Request, res: Response) => {
 
 app.post('/api/form', async (req: Request, res: Response) => {
   try {
-    const { fristname,lastname,phone,email,company,companysize,overview,refund,country} = req.body
-   
+    const { fristname, lastname, phone, email, company, companysize, overview, refund, country } = req.body
+
     const user = await prisma.form.create({
       data: {
         fristname: fristname,
         lastname: lastname,
-        phone:phone,
-        companysize:companysize,
-        company:company,
-         email:email,
-         overview:overview,
-         refund:refund,
-         country:country,
-         
+        phone: phone,
+        companysize: companysize,
+        company: company,
+        email: email,
+        overview: overview,
+        refund: refund,
+        country: country,
+
       }
     })
     res.status(201).json(user)
@@ -134,15 +134,15 @@ app.get('/', (req: Request, res: Response) => {
 // company
 app.post('/api/company', async (req: Request, res: Response) => {
   try {
-    const {companyname,phone,email,sector} = req.body
-   
+    const { companyname, phone, email, sector } = req.body
+
     const user = await prisma.company.create({
       data: {
-       companyname:companyname,
-       phone:phone,
-       email:email,
-       sector:sector
-         
+        companyname: companyname,
+        phone: phone,
+        email: email,
+        sector: sector
+
       }
     })
     res.status(201).json(user)
@@ -182,15 +182,15 @@ app.get('/api/company/:id', async (req: Request, res: Response) => {
 app.put('/api/company/:id', async (req: Request, res: Response) => {
   try {
     const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id
-    const { companyname,phone,email,sector} = req.body
+    const { companyname, phone, email, sector } = req.body
     const user = await prisma.company.update({
       where: { id: parseInt(id) },
       data: {
-       companyname:companyname,
-       phone:phone,
-       email:email,
-       sector:sector
-         
+        companyname: companyname,
+        phone: phone,
+        email: email,
+        sector: sector
+
       }
     })
     res.json(user)
@@ -228,7 +228,7 @@ app.get('/api/image', async (req: Request, res: Response) => {
 // POST create new user image
 app.post('/api/image', upload.single('img'), async (req: Request, res: Response) => {
   try {
-    const {name,age} = req.body
+    const { name, age } = req.body
     const image = (req as any).file;
 
     if (!image) {
@@ -244,16 +244,16 @@ app.post('/api/image', upload.single('img'), async (req: Request, res: Response)
       data: {
         image_url: uploadResult.secure_url,
         public_id: uploadResult.public_id,
-        name:name,
-        age:age
+        name: name,
+        age: age
       },
     });
 
     return res.status(201).json({
-        success: true,
-        message: "Image uploaded successfully",
-        image: savedImage,
-      });
+      success: true,
+      message: "Image uploaded successfully",
+      image: savedImage,
+    });
 
   } catch (error: any) {
     console.error('Image upload error:', error);
@@ -266,7 +266,7 @@ app.post('/api/image', upload.single('img'), async (req: Request, res: Response)
 //image upload and company data
 app.post('/api/companys', upload.single('img'), async (req: Request, res: Response) => {
   try {
-    const {companyname,phone,email,sector} = req.body
+    const { companyname, phone, email, sector } = req.body
     const image = (req as any).file;
 
     if (!image) {
@@ -282,18 +282,18 @@ app.post('/api/companys', upload.single('img'), async (req: Request, res: Respon
       data: {
         image_url: uploadResult.secure_url,
         public_id: uploadResult.public_id,
-        companyname:companyname,
-        phone:phone,
-        email:email,
-        sector:sector
+        companyname: companyname,
+        phone: phone,
+        email: email,
+        sector: sector
       },
     });
 
     return res.status(201).json({
-        success: true,
-        message: "Image uploaded successfully",
-        image: savedImage,
-      });
+      success: true,
+      message: "Image uploaded successfully",
+      image: savedImage,
+    });
 
   } catch (error: any) {
     console.error('Image upload error:', error);
@@ -314,4 +314,31 @@ app.get('/api/companys', async (req: Request, res: Response) => {
 
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`)
+})
+
+
+//URL schema
+
+app.get('/api/url', async (req: Request, res: Response) => {
+  try {
+    const users = await prisma.url.findMany()
+    res.json(users)
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch form' })
+  }
+})
+
+app.post('/api/url', async (req: Request, res: Response) => {
+  try {
+    const { compurl } = req.body
+
+    const user = await prisma.url.create({
+      data: {
+        compurl: compurl,
+      }
+    })
+    res.status(201).json(user)
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to create user' })
+  }
 })
