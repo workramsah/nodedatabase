@@ -64,3 +64,13 @@ model Url {
   id      Int    @id @default(autoincrement())
   compurl String
 }
+
+model Text {
+  id Int @id @default(autoincrement())
+  comptext String
+}
+
+model Jsons {
+  id Int @id @default(autoincrement())
+  compjson String
+}

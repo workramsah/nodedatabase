@@ -317,6 +317,10 @@ app.listen(port, () => {
 })
 
 
+
+
+
+
 //URL schema
 
 app.get('/api/url', async (req: Request, res: Response) => {
@@ -340,5 +344,113 @@ app.post('/api/url', async (req: Request, res: Response) => {
     res.status(201).json(user)
   } catch (error) {
     res.status(500).json({ error: 'Failed to create user' })
+  }
+})
+
+// get single url
+app.get('/api/url/:id', async (req: Request, res: Response) => {
+  try {
+    const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id
+    const user = await prisma.url.findUnique({
+      where: { id: parseInt(id) }
+    })
+    if (user) {
+      res.json(user)
+    } else {
+      res.status(404).json({ error: 'User not found' })
+    }
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch user' })
+  }
+})
+
+
+
+
+
+//Text API
+
+app.get('/api/text', async (req: Request, res: Response) => {
+  try {
+    const users = await prisma.text.findMany()
+    res.json(users)
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch form' })
+  }
+})
+
+app.post('/api/text', async (req: Request, res: Response) => {
+  try {
+    const { comptext } = req.body
+
+    const user = await prisma.text.create({
+      data: {
+        comptext: comptext,
+      }
+    })
+    res.status(201).json(user)
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to create user' })
+  }
+})
+
+// get single text
+app.get('/api/text/:id', async (req: Request, res: Response) => {
+  try {
+    const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id
+    const user = await prisma.text.findUnique({
+      where: { id: parseInt(id) }
+    })
+    if (user) {
+      res.json(user)
+    } else {
+      res.status(404).json({ error: 'User not found' })
+    }
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch user' })
+  }
+})
+
+
+//Jsons API
+
+app.get('/api/jsons', async (req: Request, res: Response) => {
+  try {
+    const users = await prisma.jsons.findMany()
+    res.json(users)
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch form' })
+  }
+})
+
+app.post('/api/jsons', async (req: Request, res: Response) => {
+  try {
+    const { compjson } = req.body
+
+    const user = await prisma.jsons.create({
+      data: {
+        compjson: compjson,
+      }
+    })
+    res.status(201).json(user)
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to create user' })
+  }
+})
+
+// get single json
+app.get('/api/jsons/:id', async (req: Request, res: Response) => {
+  try {
+    const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id
+    const user = await prisma.jsons.findUnique({
+      where: { id: parseInt(id) }
+    })
+    if (user) {
+      res.json(user)
+    } else {
+      res.status(404).json({ error: 'User not found' })
+    }
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch user' })
   }
 })
